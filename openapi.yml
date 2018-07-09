@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: PHP Mail API
+  description: REST Microframework for sending emails
+paths:
+  /:
+    get:
+      summary: Display Help/About Page
+      description: Display Help Page
+      responses:
+        200:
+          description: OK
+  /mail:
+    post:
+      summary: Send an email
+      description: Send Mail
+      requestBody:
+        description: Blim Blam
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/mail'
+      responses:
+        200:
+          description: OK
+components:
+  schemas:
+    mail:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@examp.le
+        subject:
+          type: string
+          example: Hi Lea!
+        message:
+          type: string
+          example: How are you?
+        g-recaptcha-response:
+          type: string
+        redirect:
+          type: string
+      required: 
+        - name
+        - email 
+        - subject
+        - message
