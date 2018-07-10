@@ -2,23 +2,23 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+$container = $app->getContainer();
 
 // Routes
-/*
-$app->get('/[{name}]', function (Request $request, Response $response, array $args) {
-    // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
 
-    // Render index view
-    return $this->renderer->render($response, 'index.phtml', $args);
-}); */
-
-$app->get('/', function (Request $request, Response $response, array $args) {
-    return $response->write('It works!');
+$app->get('/', function(Request $request, Response $response) {
+    return $response->withStatus(301)->withHeader('Location', '/docs/');
 });
 
-$app->post('/mail', function (Request $request, Response $response, array $args) {
+$app->get('/mail', function (Request $request, Response $response, array $args) {
     $this->logger->info("'/mail' route");
-    $recaptcha = new ReCaptcha\ReCaptcha("todo_where_to_put_my_secret_key");
+    $appSettings = $this->get('settings')['appSettings'];
+    $secret = $appSettings['recaptcha_secret'];
+    $recaptcha = new ReCaptcha\ReCaptcha($secret);
+
     return $response->write("It works!");
+});
+
+$app->options('/mail', function ($request, $response, $args) {
+    return $response;
 });

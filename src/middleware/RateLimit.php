@@ -2,27 +2,28 @@
 
 namespace App\Middleware;
 
-
-
 class RateLimit
 {
 
+  private $tableName = 'xrequests';
 
   private $db;
   private $logger;
+  private $env;
   private $requests_per_minute;
 
-  public function __construct($db, $logger, $requests_per_minute = 60) {
-    $this->db = $db;
-    $this->logger = $logger;
+  public function __construct($container, $requests_per_minute = 60) {
+    $this->db = $container['db'];
+    $this->logger = $container['logger'];
+    $this->env = $container['environment'];
     $this->requests_per_minute = $requests_per_minute;
     $this->initDatabase();
   }
 
   public function __invoke($request, $response, $next) {    
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = $this->env['REMOTE_ADDR'];
     try {
-      $query = $this->db->prepare("SELECT COUNT(*) AS requests FROM `xrequests` WHERE `ip` = '$ip' AND `ts` >= datetime('now', '-1 minute')");
+      $query = $this->db->prepare("SELECT COUNT(*) AS requests FROM `$this->tableName` WHERE `ip` = '$ip' AND `ts` >= datetime('now', '-1 minute')");
       $query->execute();
       $result = $query->fetch();
       if ($result) {
@@ -30,8 +31,8 @@ class RateLimit
           return $this->tooManyRequests($response);
         }
       }
-      $this->db->exec("INSERT INTO `xrequests` (ip) VALUES ('$ip')");
-      $this->db->exec("DELETE FROM `xrequests` WHERE `ts` <= datetime('now', '-5 minutes')");
+      $this->db->exec("INSERT INTO `$this->tableName` (ip) VALUES ('$ip')");
+      $this->db->exec("DELETE FROM `$this->tableName` WHERE `ts` <= datetime('now', '-5 minutes')");
     } catch (PDOException $ex) {
       $log->error($ex->getMessage());
     }
@@ -46,7 +47,7 @@ class RateLimit
 
   protected function initDatabase() {
     try {
-      $this->db->exec("CREATE TABLE IF NOT EXISTS `xrequests` (
+      $this->db->exec("CREATE TABLE IF NOT EXISTS `$this->tableName` (
         `id` INTEGER PRIMARY KEY,
         `ip` varchar(45) NOT NULL DEFAULT '',
         `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP

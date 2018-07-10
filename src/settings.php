@@ -8,7 +8,7 @@ if (file_exists($appSettingsPath)) {
         'mailto' => 'email@example.com',
         'recaptcha_secret' => 'secret key',
         'recaptcha_key' => 'public key',
-        'allowed_hosts' => array('terabaud.de', 'terabaud.github.io'),
+        'allowed_origins' => array('terabaud.de', 'terabaud.github.io'),
         'db_connection' => 'sqlite:../data/database.sqlite',
         'db_user' => NULL,
         'db_password' => NULL

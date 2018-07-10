@@ -6,11 +6,11 @@ info:
 paths:
   /:
     get:
-      summary: Display Help/About Page
-      description: Display Help Page
+      summary: Redirect to documentation
+      description: Redirect to documentation
       responses:
-        200:
-          description: OK
+        301:
+          description: Moved Permanently
   /mail:
     post:
       summary: Send an email
