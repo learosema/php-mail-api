@@ -25,7 +25,7 @@ class RateLimit
       $query->execute();
       $result = $query->fetch();
       if ($result) {
-        if ($result['requests'] > self::REQUESTS_PER_MINUTE) {
+        if ($result['requests'] >= self::REQUESTS_PER_MINUTE) {
           return $this->tooManyRequests($response);
         }
       }
