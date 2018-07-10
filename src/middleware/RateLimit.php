@@ -7,14 +7,15 @@ namespace App\Middleware;
 class RateLimit
 {
 
-  const REQUESTS_PER_MINUTE = 2;
 
   private $db;
   private $logger;
+  private $requests_per_minute;
 
-  public function __construct($db, $logger) {
+  public function __construct($db, $logger, $requests_per_minute = 60) {
     $this->db = $db;
     $this->logger = $logger;
+    $this->requests_per_minute = $requests_per_minute;
     $this->initDatabase();
   }
 
@@ -25,11 +26,12 @@ class RateLimit
       $query->execute();
       $result = $query->fetch();
       if ($result) {
-        if ($result['requests'] >= self::REQUESTS_PER_MINUTE) {
+        if ($result['requests'] >= $this->requests_per_minute) {
           return $this->tooManyRequests($response);
         }
       }
       $this->db->exec("INSERT INTO `xrequests` (ip) VALUES ('$ip')");
+      $this->db->exec("DELETE FROM `xrequests` WHERE `ts` <= datetime('now', '-5 minutes')");
     } catch (PDOException $ex) {
       $log->error($ex->getMessage());
     }
@@ -39,7 +41,7 @@ class RateLimit
 
   protected function tooManyRequests($response) {
     $response->getBody()->write('Too many requests.');
-    return $response->withStatus(429)->withHeader('RateLimit-Limit', self::REQUESTS_PER_MINUTE);
+    return $response->withStatus(429)->withHeader('RateLimit-Limit', $this->requests_per_minute);
   }
 
   protected function initDatabase() {

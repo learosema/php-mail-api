@@ -5,4 +5,4 @@
 
 $container = $app->getContainer();
 
-$app->add(new \App\Middleware\RateLimit($container['db'], $container['logger']));
+$app->add(new \App\Middleware\RateLimit($container['db'], $container['logger'], 5));
