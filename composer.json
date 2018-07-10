@@ -23,6 +23,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "": "src/middleware/",
             "Tests\\": "tests/"
         }
     },

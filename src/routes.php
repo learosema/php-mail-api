@@ -13,6 +13,11 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     return $this->renderer->render($response, 'index.phtml', $args);
 }); */
 
+$app->get('/', function (Request $request, Response $response, array $args) {
+    $secrets = $this->get('settings')['appSettings'];
+    return $response->write('It works!' . json_encode($secrets));
+});
+
 $app->post('/mail', function (Request $request, Response $response, array $args) {
     $this->logger->info("'/mail' route");
     $recaptcha = new ReCaptcha\ReCaptcha("todo_where_to_put_my_secret_key");
