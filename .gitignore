@@ -1,5 +1,6 @@
 /vendor/
 /logs/*
 !/logs/README.md
-/data/*
-!/data/.htaccess
+/data/*.json
+/data/*.sqlite
+
