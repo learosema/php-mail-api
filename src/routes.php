@@ -14,8 +14,7 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
 }); */
 
 $app->get('/', function (Request $request, Response $response, array $args) {
-    $secrets = $this->get('settings')['appSettings'];
-    return $response->write('It works!' . json_encode($secrets));
+    return $response->write('It works!');
 });
 
 $app->post('/mail', function (Request $request, Response $response, array $args) {
