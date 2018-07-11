@@ -15,9 +15,9 @@ $app->get('/mail', function (Request $request, Response $response, array $args) 
     $appSettings = $this->get('settings')['appSettings'];
     $secret = $appSettings['recaptcha_secret'];
     $recaptcha = new ReCaptcha\ReCaptcha($secret);
-
     return $response->write("It works!");
-});
+    
+})->add(new \App\Middleware\RateLimit($container, 3));
 
 $app->options('/mail', function ($request, $response, $args) {
     return $response;
