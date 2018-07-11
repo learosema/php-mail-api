@@ -2,7 +2,7 @@
 // TODO's:
 // Consider to do Unit Tests instead?
 //
-// use POST instead of GET and without RateLimit middleware
+// use POST instead of GET
 //
 // mock the mail function, maybe via
 // https://github.com/php-mock/php-mock 

@@ -44,7 +44,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         // Use the application settings
         $settings = require __DIR__ . '/../../src/settings.php';
-
+        
+        // Use an in-memory database.
+        $settings['settings']['appSettings']['db_connection'] = 'sqlite::memory:';
+        
         // Instantiate the application
         $app = new App($settings);
 
