@@ -1,40 +1,56 @@
 <?php
+// TODO's:
+// Consider to do Unit Tests instead?
+//
+// use POST instead of GET and without RateLimit middleware
+//
+// mock the mail function, maybe via
+// https://github.com/php-mock/php-mock 
+//
+
 
 namespace Tests\Functional;
 
 class HomepageTest extends BaseTestCase
 {
-    /**
-     * Test that the index route returns a rendered response containing the text 'SlimFramework' but not a greeting
-     */
-    public function testGetHomepageWithoutName()
-    {
-        $response = $this->runApp('GET', '/');
+  /**
+   * Test that the / route redirects to the documentation in /docs/
+   */
+  public function testGetIndex() {
+    $response = $this->runApp('GET', '/');
+    $location = implode("", $response->getHeader('Location'));
+    $this->assertEquals('/docs/', $location);
+    $this->assertEquals(301, $response->getStatusCode());
+  }
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('SlimFramework', (string)$response->getBody());
-        $this->assertNotContains('Hello', (string)$response->getBody());
-    }
+  /**
+   * Test that the Options Preflight sends the appropiate CORS headers
+   */
+  public function testOptionsPreflight() {
+    $response = $this->runApp('OPTIONS', '/mail', null, true);
+    $headers = $response->getHeaders();
+    $this->assertArrayHasKey('Access-Control-Allow-Origin', $headers);
+    $this->assertArrayHasKey('Access-Control-Allow-Headers', $headers);
+    $this->assertArrayHasKey('Access-Control-Allow-Methods', $headers);
+    $this->assertEquals(200, $response->getStatusCode());
+  }
 
-    /**
-     * Test that the index route with optional name argument returns a rendered greeting
-     */
-    public function testGetHomepageWithGreeting()
-    {
-        $response = $this->runApp('GET', '/name');
+  /**
+   * Test that the /mail route works
+   */
+  public function testPostMail() {
+    $response = $this->runApp('GET', '/mail', null, false);
+    $this->assertEquals(200, $response->getStatusCode());
+  }
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('Hello name!', (string)$response->getBody());
-    }
+  /**
+   * Test that the index route won't accept a post request
+   */
+  public function testPostHomepageNotAllowed()
+  {
+      $response = $this->runApp('POST', '/', ['test']);
 
-    /**
-     * Test that the index route won't accept a post request
-     */
-    public function testPostHomepageNotAllowed()
-    {
-        $response = $this->runApp('POST', '/', ['test']);
-
-        $this->assertEquals(405, $response->getStatusCode());
-        $this->assertContains('Method not allowed', (string)$response->getBody());
-    }
+      $this->assertEquals(405, $response->getStatusCode());
+      $this->assertContains('Method not allowed', (string)$response->getBody());
+  }
 }

@@ -13,7 +13,7 @@ class Cors {
 
   public function __invoke($request, $response, $next) {
     $response = $next($request, $response);
-    $origin = $request->getHeader('Origin');
+    $origin = implode('', $request->getHeader('Origin'));
     if (! in_array($origin, $this->allowed_origins)) {
       return $response;
     }
