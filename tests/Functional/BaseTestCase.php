@@ -7,20 +7,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Environment;
 
-/**
- * This is an example class that shows how you could set up a method that
- * runs the application. Note that it doesn't cover all use-cases and is
- * tuned to the specifics of this skeleton app, so if your needs are
- * different, you'll need to change it.
- */
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Use middleware when running application?
-     *
-     * @var bool
-     */
-    protected $withMiddleware = true;
 
     /**
      * Process the application given a request method and URI
@@ -30,7 +18,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @param array|object|null $requestData the request data
      * @return \Slim\Http\Response
      */
-    public function runApp($requestMethod, $requestUri, $requestData = null)
+    public function runApp($requestMethod, $requestUri, $requestData = null, $withMiddleware = true)
     {
         // Create a mock environment for testing with
         $environment = Environment::mock(
@@ -43,6 +31,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         // Set up a request object based on the environment
         $request = Request::createFromEnvironment($environment);
 
+        // Set Headers
+        $request = $request->withHeader('Origin', 'http://localhost:8080/');
+
         // Add request data, if it exists
         if (isset($requestData)) {
             $request = $request->withParsedBody($requestData);
@@ -53,7 +44,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         // Use the application settings
         $settings = require __DIR__ . '/../../src/settings.php';
-
+        
+        // Use an in-memory database.
+        $settings['settings']['appSettings']['db_connection'] = 'sqlite::memory:';
+        
         // Instantiate the application
         $app = new App($settings);
 
@@ -61,7 +55,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         require __DIR__ . '/../../src/dependencies.php';
 
         // Register middleware
-        if ($this->withMiddleware) {
+        if ($withMiddleware) {
             require __DIR__ . '/../../src/middleware.php';
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-$appSettingsPath = "../data/appsettings.json";
+$appSettingsPath = __DIR__ . "/../data/appsettings.json";
 if (file_exists($appSettingsPath)) {
     $appSettings = json_decode(file_get_contents($appSettingsPath), true);
 } else {
@@ -8,8 +8,8 @@ if (file_exists($appSettingsPath)) {
         'mailto' => 'email@example.com',
         'recaptcha_secret' => 'secret key',
         'recaptcha_key' => 'public key',
-        'allowed_origins' => array('terabaud.de', 'terabaud.github.io'),
-        'db_connection' => 'sqlite:../data/database.sqlite',
+        'allowed_origins' => array('https://terabaud.de', 'https://terabaud.github.io', 'http://localhost:8080/', 'http://localhost:8081/'),
+        'db_connection' => 'sqlite:' . __DIR__ .'/../data/database.sqlite',
         'db_user' => NULL,
         'db_password' => NULL
     ];

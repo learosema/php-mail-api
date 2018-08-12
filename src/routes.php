@@ -25,7 +25,7 @@ $app->post('/mail', function (Request $request, Response $response, array $args)
     // $name = "$appSettings['name'] < $appSettings['email'] >";
     mail($appSettings['mailto'], $params['subject'], $params['message']);
     return $response->write("It works!");
-});
+})->add(new \App\Middleware\RateLimit($container, 3));
 
 $app->options('/mail', function ($request, $response, $args) {
     return $response;
