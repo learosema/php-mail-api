@@ -16,7 +16,7 @@ paths:
       summary: Send an email
       description: Send Mail
       requestBody:
-        description: Blim Blam
+        description: E-Mail with fields name, email, subject and message
         required: true
         content:
           application/json:
