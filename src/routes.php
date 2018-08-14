@@ -22,15 +22,16 @@ $app->post('/mail', function (Request $request, Response $response, array $args)
   
   $params = $request->getParsedBody();
   if ($params == null) {
-    $params = array();
+    $params = [];
   }
-  $requiredParams = array('subject', 'message', 'email', 'g-recaptcha-response');
+  $requiredParams = ['subject', 'message', 'email', 'name', 'g-recaptcha-response'];
   
   foreach ($requiredParams as $reqParam) {
     if (! array_key_exists($reqParam, $params) || strlen(trim($params[$reqParam])) < 2 ) {
       return $response->withStatus(422)->write("Parameter $reqParam missing");
     }
   }
+  return $response->write("It works!");
   $recaptcha = new ReCaptcha\ReCaptcha($secret);
   $gRecaptchaResponse = $params["g-recaptcha-response"];
   $resp = $recaptcha

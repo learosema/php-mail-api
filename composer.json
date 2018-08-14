@@ -1,14 +1,14 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
+    "name": "terabaud/php-mail-api",
+    "description": "A simple API for sending emails",
     "keywords": ["microframework", "rest", "router", "psr7"],
     "homepage": "http://github.com/slimphp/Slim-Skeleton",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
+            "name": "Lea Rosema",
+            "email": "terabaud@gmail.com",
+            "homepage": "http://terabaud.github.io/"
         }
     ],
     "require": {
@@ -36,5 +36,4 @@
         "start": "php -S localhost:8080 -t public",
         "test": "phpunit"
     }
-
 }

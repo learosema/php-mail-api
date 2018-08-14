@@ -11,6 +11,8 @@ namespace Tests\Functional;
 
 class HomepageTest extends BaseTestCase
 {
+
+  use \phpmock\phpunit\PHPMock;
   /**
    * Test that the / route redirects to the documentation in /docs/
    */
@@ -34,11 +36,32 @@ class HomepageTest extends BaseTestCase
   }
 
   /**
+   * The GET /mail route without parameters should return 200
+   */
+  public function testGetMail() {
+    $response = $this->runApp('GET', '/mail', null, false);
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  /**
    * The /mail route without parameters should return 422
    */
-  public function testPostMail() {
+  public function testPostMailWithoutParams() {
     $response = $this->runApp('POST', '/mail', null, false);
     $this->assertEquals(422, $response->getStatusCode());
+  }
+
+  public function testPostMail() {
+    // $mail = $this->getFunctionMock(__NAMESPACE__, "mail");
+    // $mail->expects($this->once())->willReturn(TRUE);
+    $response = $this->runApp('POST', '/mail', [
+      "name" => "Lea",
+      "email" => "lea@example.com",
+      "subject" => "Hello",
+      "message" => "My name is Lea!",
+      "g-recaptcha-response" => "0xdeadbeef"
+    ], false);
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
   /**
