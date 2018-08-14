@@ -2,8 +2,6 @@
 // TODO's:
 // Consider to do Unit Tests instead?
 //
-// use POST instead of GET
-//
 // mock the mail function, maybe via
 // https://github.com/php-mock/php-mock 
 //
@@ -36,11 +34,11 @@ class HomepageTest extends BaseTestCase
   }
 
   /**
-   * Test that the /mail route works
+   * The /mail route without parameters should return 422
    */
   public function testPostMail() {
-    $response = $this->runApp('GET', '/mail', null, false);
-    $this->assertEquals(200, $response->getStatusCode());
+    $response = $this->runApp('POST', '/mail', null, false);
+    $this->assertEquals(422, $response->getStatusCode());
   }
 
   /**
